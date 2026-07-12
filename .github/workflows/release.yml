@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*.*.*'   # matches bare version tags like 1.2.0
+
+permissions:
+  contents: write   # required for the token to create releases
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The minor version selects the Factorio target: 1.0.x -> 2.0, 1.1.x -> 2.1.
+      # Delete the 0) case when support for Factorio 2.0 ends.
+      - name: Set version and factorio_version from tag
+        id: mod
+        run: |
+          NAME=$(jq -r '.name' info.json)
+          VERSION="$GITHUB_REF_NAME"
+          MINOR=$(echo "$VERSION" | cut -d. -f2)
+          case "$MINOR" in
+            0) FACTORIO_VERSION="2.0"; LATEST="--latest=false" ;;
+            1) FACTORIO_VERSION="2.1"; LATEST="" ;;
+            *) echo "::error::No Factorio version mapped for minor version '$MINOR'. Update the mapping in release.yml."; exit 1 ;;
+          esac
+          echo "Building $VERSION for Factorio $FACTORIO_VERSION"
+          jq --arg v "$VERSION" --arg fv "$FACTORIO_VERSION" \
+            '.version = $v | .factorio_version = $fv' info.json > info.json.tmp
+          mv info.json.tmp info.json
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "latest=$LATEST" >> "$GITHUB_OUTPUT"
+
+      - name: Stage mod files
+        run: |
+          DIR="${{ steps.mod.outputs.name }}_${{ steps.mod.outputs.version }}"
+          mkdir -p "build/$DIR"
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitignore' \
+            --exclude='build' \
+            --exclude='portal' \
+            ./ "build/$DIR/"
+
+      - name: Create zip
+        run: |
+          DIR="${{ steps.mod.outputs.name }}_${{ steps.mod.outputs.version }}"
+          cd build
+          zip -r "${DIR}.zip" "$DIR"
+
+      - name: Create release and upload asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          DIR="${{ steps.mod.outputs.name }}_${{ steps.mod.outputs.version }}"
+          gh release create "$GITHUB_REF_NAME" \
+            "build/${DIR}.zip" \
+            --title "${{ steps.mod.outputs.version }}" \
+            --generate-notes \
+            ${{ steps.mod.outputs.latest }}

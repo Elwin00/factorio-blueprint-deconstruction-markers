@@ -1,0 +1,15 @@
+# Tooling
+.idea/
+*.DotSettings*
+.emmyrc.json
+.luarc.json
+
+# OS-generated
+.DS_Store
+Thumbs.db
+desktop.ini
+Folder.settings
+
+# Build/output
+/build/
+*.zip

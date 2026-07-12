@@ -1,0 +1,11 @@
+{
+  "name": "blueprint-deconstruction-markers",
+  "version": "0.0.0",
+  "title": "Blueprint Deconstruction Markers",
+  "author": "Elwin",
+  "description": "Adds a marker for blueprints. When a blueprint containing markers is placed with super-force build, existing entities under the markers are marked for deconstruction and the marker ghosts remove themselves. Blueprints can now remove entities, not just add or replace them.",
+  "factorio_version": "2.1",
+  "dependencies": [
+    "base >= 2.0"
+  ]
+}
