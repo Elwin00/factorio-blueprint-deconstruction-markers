@@ -28,6 +28,6 @@ Stamp it with **super-force build** (Ctrl+Shift+Click). Normal and force build w
 
 ## Notes
 
-- The marker item has no recipe and cannot enter your inventory or a logistic network, so it can never be built by construction robots.
+- The marker item has no crafting recipe and exists only in the cursor — it never reaches an inventory or a logistic network, so robots never have one to build with.
 - Sharing a blueprint with someone who does not have the mod is safe: Factorio silently drops unknown entities on import. Their copy behaves like a normal blueprint — it adds and replaces, but does not remove.
 - Markers use the standard building collision mask, so they clear walls, turrets, assemblers, chemical plants and similar. Entities on other collision layers (rails, cliffs, resources) are not affected.
