@@ -46,6 +46,7 @@ jobs:
             --exclude='.gitignore' \
             --exclude='build' \
             --exclude='portal' \
+            --exclude='.emmyrc.json.example' \
             ./ "build/$DIR/"
 
       - name: Create zip
