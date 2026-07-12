@@ -1,5 +1,6 @@
 local MARKER = "bpdm-deconstruction-marker"
 
+---@param event EventData.on_built_entity
 local function on_player_built(event)
   local e = event.entity
   if not (e and e.valid) then return end
@@ -21,16 +22,24 @@ script.on_event(defines.events.on_built_entity, on_player_built, {
   { filter = "name", name = MARKER },
 })
 
-script.on_event(defines.events.on_robot_built_entity, function(event)
+---@param event EventData.on_robot_built_entity
+local function on_robot_built(event)
   local e = event.entity
   if e and e.valid and e.name == MARKER then
     e.destroy()
   end
-end, { { filter = "name", name = MARKER } })
+end
 
-script.on_event(defines.events.script_raised_built, function(event)
+script.on_event(defines.events.on_robot_built_entity, on_robot_built, {
+  { filter = "name", name = MARKER },
+})
+
+---@param event EventData.script_raised_built
+local function on_script_built(event)
   local e = event.entity
   if e and e.valid and e.name == "entity-ghost" and e.ghost_name == MARKER then
     e.destroy()
   end
-end)
+end
+
+script.on_event(defines.events.script_raised_built, on_script_built)
