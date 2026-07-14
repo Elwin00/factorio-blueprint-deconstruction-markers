@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.0
-Date: 2026-07-12
+Date: 2026-07-14
   Features:
     - Initial release for Factorio 2.1.
     - Deconstruction marker: an item with no crafting recipe, placed in blueprints on tiles whose entities should be removed.
@@ -8,6 +8,6 @@ Date: 2026-07-12
     - Shortcut bar button and Alt+X keybind put a marker in the cursor; the cursor refills after each placement.
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.0
-Date: 2026-07-12
+Date: 2026-07-14
   Features:
     - Initial release for Factorio 2.0. Functionally identical to 1.1.0.
